@@ -28,7 +28,7 @@ def visualize_trajectory(model_params,
                          actor_config):
     video_dir = "./results/expert_videos"
 
-    env = gym.make("InvertedDoublePendulum-v4", render_mode="rgb_array")
+    env = gym.make("InvertedPendulum-v4", render_mode="rgb_array")
     env = gym.wrappers.RecordVideo(env, video_dir)
     
     rollout(actor_config=actor_config,
