@@ -52,6 +52,9 @@ class MLPActor(nn.Module):
             length = np.product(shape)
             block = array[arr_idx:arr_idx + length]
             if len(block) != length:
+                print(len(block))
+                print(length)
+
                 raise ValueError("Array not long enough!")
             block = np.reshape(block, shape)
             arr_idx += length
