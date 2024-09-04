@@ -56,14 +56,14 @@ def train(params,
         best_solution = sols[np.argmax(np_best_rewards)]
         best_solutions.append(best_solution)
 
-        if max(sols_rewards) == 1000:
-            break
+        # if max(sols_rewards) == 1000:
+        #     break
 
     return best_rewards, best_solutions[-1]
 
 # TODO: Refactor to main
 actor_config = {
-    "layer_shapes": [(4, 128),
+    "layer_shapes": [(8, 128),
                      (128, 128),
                      (128, 1)],
     "activation": nn.ReLU

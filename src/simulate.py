@@ -6,8 +6,13 @@ from src.mlp_actor import MLPActor
 
 def rollout(actor_config,
             params=None,
-            seed=None):
-    env = gym.make("InvertedPendulum-v4")
+            seed=None,
+            video_env=None):
+    env = None
+    if video_env is None:
+        env = gym.make("InvertedDoublePendulum-v5")
+    else:
+        env = video_env
 
     action_dim = np.prod(env.action_space.shape)
     obs_dim = env.observation_space.shape[0]
@@ -43,5 +48,8 @@ def rollout(actor_config,
         trajectories["next_state"][total_timesteps] = obs
 
         total_timesteps += 1
+    
+    if video_env is None:
+        env.close()
 
     return trajectories, total_reward
