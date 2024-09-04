@@ -37,7 +37,7 @@ def train(params,
 
             # retrieve rewards of actor
             _, rewards = rollout(actor_config=actor_config,
-                                 params=sols)
+                                 params=sol_i)
             print(rewards)
 
 actor_config = {
