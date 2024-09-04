@@ -49,7 +49,7 @@ def visualize_trajectory(model_params,
 model_params = load_model("./models/models/model.pth")
 
 actor_config = {
-    "layer_shapes": [(8, 128),
+    "layer_shapes": [(4, 128),
                      (128, 128),
                      (128, 1)],
     "activation": nn.ReLU
