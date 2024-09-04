@@ -33,7 +33,7 @@ def train(params,
         # TODO: Use DASK eventually for multithreading
         for sol_i in sols:
             actor = MLPActor(**actor_config)
-            actor.deserialize(sols)
+            actor.deserialize(sol_i)
 
             # retrieve rewards of actor
             _, rewards = rollout(actor_config=actor_config,
