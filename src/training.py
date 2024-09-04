@@ -32,6 +32,7 @@ def train(params,
 
         # TODO: Use DASK eventually for multithreading
         for sol_i in sols:
+            print(sol_i)
             actor = MLPActor(**actor_config)
             actor.deserialize(sols)
 
