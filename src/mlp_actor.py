@@ -50,6 +50,9 @@ class MLPActor(nn.Module):
         for param in self.model.parameters():
             shape = tuple(param.data.shape)
             length = np.product(shape)
+
+            print(length)
+
             block = array[arr_idx:arr_idx + length]
             if len(block) != length:
                 raise ValueError("Array not long enough!")
