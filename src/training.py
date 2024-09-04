@@ -49,6 +49,8 @@ def train(params,
                                 ranking_values,
                                 num_parents)
 
+        print(f"iter {i} reward: {max(sols_rewards)}")
+
         best_rewards.append(max(sols_rewards))
         np_best_rewards = np.array(sols_rewards)
         best_solution = sols[np.argmax(np_best_rewards)]
