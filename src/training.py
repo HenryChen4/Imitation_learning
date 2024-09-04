@@ -72,7 +72,7 @@ params = actor.serialize()
 
 best_rewards, best_solution = train(params=params,
                                     actor_config=actor_config,
-                                    num_iters=30)
+                                    num_iters=100)
 
 # save rewards plot
 total_iters = np.arange(len(best_rewards))
