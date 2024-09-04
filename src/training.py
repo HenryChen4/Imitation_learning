@@ -40,7 +40,7 @@ def train(params,
         ranking_indices = np.flip(np.argsort(sols_rewards))
         ranking_values = sols_rewards
  
-        num_parents = len(sols_rewards//top_prop)
+        num_parents = len(sols_rewards)//top_prop
 
         evolution_operator.tell(ranking_indices,
                                 ranking_values,
