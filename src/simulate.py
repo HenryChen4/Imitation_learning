@@ -10,7 +10,7 @@ def rollout(actor_config,
             video_env=None):
     env = None
     if video_env is None:
-        env = gym.make("InvertedDoublePendulum-v5")
+        env = gym.make("InvertedDoublePendulum-v4")
     else:
         env = video_env
 
