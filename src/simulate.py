@@ -1,6 +1,3 @@
-"""
-Single rollout of unbatched policy for inverted pendulum task
-"""
 import numpy as np
 import gymnasium as gym
 import torch

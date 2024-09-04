@@ -1,12 +1,13 @@
-"""Trains policy with cma-es (minimal math, easy to code)"""
+import matplotlib.pyplot as plt
 import torch.nn as nn
-import torch
 import numpy as np
-from tqdm import tqdm, trange
+import torch
+import os
 
 from src.mlp_actor import MLPActor
 from src.simulate import rollout
 
+from tqdm import tqdm, trange
 from ribs.emitters.opt import CMAEvolutionStrategy
 
 def train(params,
@@ -25,6 +26,8 @@ def train(params,
     evolution_operator.reset(initial_mean)
     
     print("> Beginning black box search")
+    best_rewards = []
+    best_solutions = []
     for i in trange(num_iters):
         sols = evolution_operator.ask()
 
@@ -45,8 +48,18 @@ def train(params,
         evolution_operator.tell(ranking_indices,
                                 ranking_values,
                                 num_parents)
-        print(max(sols_rewards))
 
+        best_rewards.append(max(sols_rewards))
+        np_best_rewards = np.array(sols_rewards)
+        best_solution = sols[np.argmax(np_best_rewards)]
+        best_solutions.append(best_solution)
+
+        if max(sols_rewards) == 1000:
+            break
+
+    return best_rewards, best_solutions[-1]
+
+# TODO: Refactor to main
 actor_config = {
     "layer_shapes": [(4, 128),
                      (128, 128),
@@ -57,6 +70,20 @@ actor_config = {
 actor = MLPActor(**actor_config)
 params = actor.serialize()
 
-train(params=params,
-      actor_config=actor_config,
-      num_iters=100)
+best_rewards, best_solution = train(params=params,
+                                    actor_config=actor_config,
+                                    num_iters=30)
+
+# save rewards plot
+total_iters = np.arange(len(best_rewards))
+os.makedirs("./models", exist_ok=True)
+reward_save_path = os.path.join("./models", "best_rewards.png")
+plt.plot(total_iters, best_rewards)
+plt.xlabel("Iteration")
+plt.ylabel("Best reward")
+plt.savefig(reward_save_path)
+
+# save model
+model_save_path = os.path.join("./models", "model.pth")
+actor.deserialize(best_solution)
+torch.save(actor, model_save_path)
