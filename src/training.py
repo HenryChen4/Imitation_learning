@@ -26,6 +26,7 @@ from torchrl.modules import ProbabilisticActor, TanhNormal, ValueOperator
 from torchrl.objectives import ClipPPOLoss
 from torchrl.objectives.value import GAE
 from tqdm import tqdm
+import os
 
 # define hyperparameters
 is_fork = multiprocessing.get_start_method() == "fork"
@@ -239,4 +240,4 @@ plt.title("Return (test)")
 plt.subplot(2, 2, 4)
 plt.plot(logs["eval step_count"])
 plt.title("Max step count (test)")
-plt.savefig("results/")
+plt.savefig(os.path.join("results/result.png"))
