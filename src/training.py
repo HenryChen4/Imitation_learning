@@ -60,7 +60,7 @@ def train(params,
         if max(sols_rewards) == 1000:
             num_max += 1
 
-        if num_max > 3:
+        if num_max > 5:
             break;    
 
     return best_rewards, best_solutions[-1]
