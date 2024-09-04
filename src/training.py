@@ -59,7 +59,7 @@ def train(params,
 
         if max(sols_rewards) == 1000:
             num_max += 1
-            
+
         if num_max > 3:
             break;    
 
@@ -67,7 +67,7 @@ def train(params,
 
 # TODO: Refactor to main
 actor_config = {
-    "layer_shapes": [(11, 128),
+    "layer_shapes": [(8, 128),
                      (128, 128),
                      (128, 1)],
     "activation": nn.ReLU
