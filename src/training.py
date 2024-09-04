@@ -28,6 +28,7 @@ def train(params,
     print("> Beginning black box search")
     best_rewards = []
     best_solutions = []
+    num_max = 0
     for i in trange(num_iters):
         sols = evolution_operator.ask()
 
@@ -56,8 +57,11 @@ def train(params,
         best_solution = sols[np.argmax(np_best_rewards)]
         best_solutions.append(best_solution)
 
-        # if max(sols_rewards) == 1000:
-        #     break
+        if max(sols_rewards) == 1000:
+            num_max += 1
+            
+        if num_max > 3:
+            break;    
 
     return best_rewards, best_solutions[-1]
 
