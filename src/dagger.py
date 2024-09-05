@@ -138,10 +138,12 @@ def dagger(imitator_config,
         imitator_params = imitator.serialize()
         new_imitator_params = beta * (demonstrator_params) + (1 - beta) * imitator_params
 
+        print(f"iter {i} params: {imitator_params}")
+
         trajectory, rewards = rollout(actor_config=imitator_config,
                                       params=new_imitator_params)
         imitator_states = trajectory["state"]
-        
+
         demonstrator_response = demonstrator_rollout(demonstrator=demonstrator,
                                                      visited_states=imitator_states)
         
@@ -169,7 +171,7 @@ imitator_config = {
     "activation": nn.ReLU
 }
 
-num_iters = 1000
+num_iters = 100
 
 demonstrator_params = load_model("./old_models/aggressive/model.pth")
 demonstrator_config = {
@@ -187,7 +189,7 @@ imitator_training_loss, imitator_rewards, trained_imitator = dagger(imitator_con
                                                                     demonstrator=demonstrator,
                                                                     num_dagger_iters=num_iters,
                                                                     train_batch_size=2,
-                                                                    num_training_iters=2000)
+                                                                    num_training_iters=100)
 
 # plotting
 fig, axs = plt.subplots(2, 1, figsize=(10, 8))
