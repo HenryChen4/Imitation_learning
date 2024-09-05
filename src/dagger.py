@@ -171,7 +171,7 @@ imitator_config = {
     "activation": nn.ReLU
 }
 
-num_iters = 100
+num_iters = 10
 
 demonstrator_params = load_model("./old_models/aggressive/model.pth")
 demonstrator_config = {
@@ -209,3 +209,7 @@ plt.tight_layout()
 os.makedirs("./results", exist_ok=True)
 plot_save_path = os.path.join("./results", "loss_reward.png")
 plt.savefig(plot_save_path)
+
+# save the trained imitator model
+model_save_path = os.path.join("./models", "model.pth")
+torch.save(trained_imitator, model_save_path)
