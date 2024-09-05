@@ -1,4 +1,4 @@
 .src/__pycache__
-./results
-./models
-./old_models
+results/
+models/
+old_models/

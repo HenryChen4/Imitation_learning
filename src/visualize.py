@@ -46,14 +46,14 @@ def visualize_trajectory(model_params,
                 <source src="data:video/mp4;base64,{encoded}" type="video/mp4" />
             </video>'''))
 
-# model_params = load_model("./models/model.pth")
+model_params = load_model("./models/imitators/model.pth")
 
-# actor_config = {
-#     "layer_shapes": [(4, 128),
-#                      (128, 128),
-#                      (128, 1)],
-#     "activation": nn.ReLU
-# }
+actor_config = {
+    "layer_shapes": [(4, 128),
+                     (128, 128),
+                     (128, 1)],
+    "activation": nn.ReLU
+}
 
-# visualize_trajectory(model_params,
-#                      actor_config)
+visualize_trajectory(model_params,
+                     actor_config)

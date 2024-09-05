@@ -166,7 +166,7 @@ def dagger(imitator_config,
         imitator_rewards.append(rewards)
 
         end_time = time.time()
-        iteration_time = start_time - end_time
+        iteration_time = end_time - start_time
         iteration_times.append(iteration_time)
 
     return imitator_training_loss, imitator_rewards, iteration_times, imitator
