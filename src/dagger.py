@@ -125,7 +125,7 @@ def dagger(imitator_config,
 
     dataset = []
     imitator = MLPActor(**imitator_config)
-    imitator.initialize(nn.init.zeros_)
+    imitator.initialize(nn.init.kaiming_normal_)
 
     imitator_training_loss = []
     imitator_rewards = []
