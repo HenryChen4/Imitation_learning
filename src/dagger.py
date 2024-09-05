@@ -97,6 +97,8 @@ def train_imitator(imitator,
             target_actions = data_tuple[-1]
             predicted_actions = imitator(obs)
 
+            print(predicted_actions.detach().cpu().numpy())
+
             batch_loss = criterion(predicted_actions.detach().cpu().numpy(), target_actions)
             epoch_loss += batch_loss.item()
 
