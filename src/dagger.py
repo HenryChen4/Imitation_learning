@@ -4,6 +4,7 @@ import gymnasium as gym
 import numpy as np
 import matplotlib.pyplot as plt
 
+import torch.utils
 from tqdm import trange, tqdm
 from torch.utils.data import Dataset, DataLoader
 from torch.optim import Adam
@@ -46,7 +47,7 @@ def create_loader(data, batch_size, shuffle=False):
 def demonstrator_rollout(demonstrator,
                          visited_states):
     """ Rollout of demonstrator with ready states to collect
-    demonstrator actions.
+    demonstrator actions. 
 
     Args:
         demonstrator (MLPActor): Demonstrator model.
@@ -79,6 +80,11 @@ def train_imitator(imitator,
                    train_loader,
                    num_iters,
                    learning_rate):
+    """ON GPU"""
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Running on {device}")
+    imitator.to(device)
+
     optimizer = Adam(params=imitator.parameters(),
                      lr=learning_rate)
     criterion = torch.nn.MSELoss(reduction='mean')
@@ -87,7 +93,7 @@ def train_imitator(imitator,
     for epoch in trange(num_iters):
         epoch_loss = 0.0
         for i, (data_tuple) in enumerate(train_loader):
-            obs = data_tuple[0]
+            obs = data_tuple[0].to(device)
             target_actions = data_tuple[-1]
             predicted_actions = imitator(obs)
 
@@ -108,7 +114,7 @@ def dagger(imitator_config,
            num_training_iters,
            learning_rate=1e-3,
            beta=None):
-    """ Implementation of DAgger algorithm.
+    """ Implementation of DAgger algorithm. ON CPU
     Args:
         imitation_config (dict): Config for imitation policy.
         dc_config (dict): Config for data collection policy.
@@ -163,9 +169,9 @@ imitator_config = {
     "activation": nn.ReLU
 }
 
-num_iters = 50
+num_iters = 100
 
-demonstrator_params = load_model("./old_models/run_2/model.pth")
+demonstrator_params = load_model("./old_models/aggressive/model.pth")
 demonstrator_config = {
     "layer_shapes": [(4, 128),
                      (128, 128),
@@ -181,7 +187,7 @@ imitator_training_loss, imitator_rewards, trained_imitator = dagger(imitator_con
                                                                     demonstrator=demonstrator,
                                                                     num_dagger_iters=num_iters,
                                                                     train_batch_size=2,
-                                                                    num_training_iters=1000)
+                                                                    num_training_iters=200)
 
 # plotting
 fig, axs = plt.subplots(2, 1, figsize=(10, 8))
