@@ -3,6 +3,7 @@ import torch
 import gymnasium as gym
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 import torch.utils
 from tqdm import trange, tqdm
@@ -82,7 +83,6 @@ def train_imitator(imitator,
                    learning_rate):
     """ON GPU"""
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"Running on {device}")
     imitator.to(device)
 
     optimizer = Adam(params=imitator.parameters(),
@@ -169,7 +169,7 @@ imitator_config = {
     "activation": nn.ReLU
 }
 
-num_iters = 100
+num_iters = 1000
 
 demonstrator_params = load_model("./old_models/aggressive/model.pth")
 demonstrator_config = {
@@ -187,7 +187,7 @@ imitator_training_loss, imitator_rewards, trained_imitator = dagger(imitator_con
                                                                     demonstrator=demonstrator,
                                                                     num_dagger_iters=num_iters,
                                                                     train_batch_size=2,
-                                                                    num_training_iters=200)
+                                                                    num_training_iters=2000)
 
 # plotting
 fig, axs = plt.subplots(2, 1, figsize=(10, 8))
@@ -204,4 +204,6 @@ axs[1].set_ylabel('Rewards')
 axs[1].legend()
 
 plt.tight_layout()
-plt.show()
+os.makedirs("./results", exist_ok=True)
+plot_save_path = os.path.join("./results", "loss_reward.png")
+plt.savefig(plot_save_path)
