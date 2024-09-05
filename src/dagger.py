@@ -4,6 +4,7 @@ import gymnasium as gym
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import time
 
 import torch.utils
 from tqdm import trange, tqdm
@@ -129,7 +130,8 @@ def dagger(imitator_config,
 
     imitator_training_loss = []
     imitator_rewards = []
-    
+    iteration_times = []
+
     for i in trange(num_dagger_iters):
         if beta == None:
             beta = i/num_iters
@@ -139,6 +141,8 @@ def dagger(imitator_config,
         new_imitator_params = beta * (demonstrator_params) + (1 - beta) * imitator_params
 
         print(f"iter {i} params: {imitator_params}")
+
+        start_time = time.time()
 
         trajectory, rewards = rollout(actor_config=imitator_config,
                                       params=new_imitator_params)
@@ -161,7 +165,11 @@ def dagger(imitator_config,
         imitator_training_loss.append(mean_training_loss)
         imitator_rewards.append(rewards)
 
-    return imitator_training_loss, imitator_rewards, imitator
+        end_time = time.time()
+        iteration_time = start_time - end_time
+        iteration_times.append(iteration_time)
+
+    return imitator_training_loss, imitator_rewards, iteration_times, imitator
 
 # hyperparam init
 imitator_config = {
@@ -173,7 +181,7 @@ imitator_config = {
 
 num_iters = 10
 
-demonstrator_params = load_model("./old_models/aggressive/model.pth")
+demonstrator_params = load_model("./old_models/passive/model.pth")
 demonstrator_config = {
     "layer_shapes": [(4, 128),
                      (128, 128),
@@ -185,11 +193,11 @@ demonstrator.deserialize(demonstrator_params)
 
 
 # run dagger
-imitator_training_loss, imitator_rewards, trained_imitator = dagger(imitator_config=imitator_config,
-                                                                    demonstrator=demonstrator,
-                                                                    num_dagger_iters=num_iters,
-                                                                    train_batch_size=2,
-                                                                    num_training_iters=100)
+imitator_training_loss, imitator_rewards, iteration_times, trained_imitator = dagger(imitator_config=imitator_config,
+                                                                                     demonstrator=demonstrator,
+                                                                                     num_dagger_iters=num_iters,
+                                                                                     train_batch_size=2,
+                                                                                     num_training_iters=100)
 
 # plotting
 fig, axs = plt.subplots(2, 1, figsize=(10, 8))
@@ -209,6 +217,14 @@ plt.tight_layout()
 os.makedirs("./results", exist_ok=True)
 plot_save_path = os.path.join("./results", "loss_reward.png")
 plt.savefig(plot_save_path)
+
+plt.clf()
+
+plt.plot(np.arange(len(iteration_times)), iteration_times)
+plt.xlabel("Iteration")
+plt.ylabel("Time taken")
+time_save_path = os.path.join("./results", "time.png")
+plt.savefig(time_save_path)
 
 # save the trained imitator model
 model_save_path = os.path.join("./models", "model.pth")
