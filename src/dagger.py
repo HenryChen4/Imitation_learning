@@ -95,7 +95,7 @@ def train_imitator(imitator,
         for i, (data_tuple) in enumerate(train_loader):
             obs = data_tuple[0].to(device)
             target_actions = data_tuple[-1]
-            predicted_actions = imitator(obs)
+            predicted_actions = imitator(obs).detach().cpu().numpy()
 
             batch_loss = criterion(predicted_actions, target_actions)
             epoch_loss += batch_loss.item()
